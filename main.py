@@ -1,49 +1,53 @@
 from fastapi import FastAPI, Depends
-from routers import Usuario, Administrador, Test, Respuestas, Estadisticas, TestEstadistica, Segmentacion, Auth
 from fastapi.middleware.cors import CORSMiddleware
-import os
-from database import Base, engine, get_db
 from sqlalchemy.orm import Session
+import os
 import logging
 import sys
+
+from database import Base, engine, get_db
+from routers import (
+    Usuario, Administrador, Test, Respuestas,
+    Estadisticas, TestEstadistica, Segmentacion, Auth
+)
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Inicializar FastAPI
 app = FastAPI()
 
-# Obtener las URLs permitidas desde variables de entorno o usar valores por defecto
+# Variables de entorno para CORS
 FRONTEND_URL = os.getenv("FRONTEND_URL", "https://frontend-gesex-production.up.railway.app")
 DEVELOPMENT_URL = os.getenv("DEVELOPMENT_URL", "http://localhost:5173")
-PORT = os.getenv("PORT", "8000")
 
-# Informar sobre la configuración
+# Mostrar configuración cargada
 logger.info(f"FRONTEND_URL: {FRONTEND_URL}")
 logger.info(f"DEVELOPMENT_URL: {DEVELOPMENT_URL}")
-logger.info(f"PORT: {PORT}")
-logger.info(f"DATABASE_URL existe: {os.getenv('DATABASE_URL') is not None}")
+logger.info(f"DATABASE_URL exists: {os.getenv('DATABASE_URL') is not None}")
 
-@app.on_event("startup")
-async def startup_db_client():
-    try:
-        # Crear las tablas si no existen
-        logger.info("Iniciando creación de tablas...")
-        Base.metadata.create_all(bind=engine)
-        logger.info("Tablas creadas correctamente")
-    except Exception as e:
-        logger.error(f"Error al crear las tablas: {e}")
-        sys.exit(1)
-
+# Middleware de CORS (puedes limitar luego en producción)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Temporalmente permitir todas para diagnóstico
+    allow_origins=["*"],  # Cambiar a [FRONTEND_URL, DEVELOPMENT_URL] en producción
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Incluir routers con manejo de errores
+# Crear tablas al iniciar
+@app.on_event("startup")
+async def startup_event():
+    try:
+        logger.info("Creando tablas de la base de datos...")
+        Base.metadata.create_all(bind=engine)
+        logger.info("Tablas creadas exitosamente.")
+    except Exception as e:
+        logger.error(f"Error al crear las tablas: {e}")
+        sys.exit(1)
+
+# Incluir routers
 try:
     app.include_router(Usuario.router)
     app.include_router(Administrador.router)
@@ -53,30 +57,34 @@ try:
     app.include_router(TestEstadistica.router)
     app.include_router(Segmentacion.router)
     app.include_router(Auth.router, prefix="/api", tags=["Auth"])
-    logger.info("Todos los routers incluidos correctamente")
+    logger.info("Routers incluidos correctamente.")
 except Exception as e:
     logger.error(f"Error al incluir los routers: {e}")
+    sys.exit(1)
 
+# Ruta raíz
 @app.get("/")
 async def root():
     return {"message": "API de GESEX funcionando correctamente"}
 
+# Ruta para healthcheck
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
 
+# Ruta para depuración
 @app.get("/debug")
 async def debug_info(db: Session = Depends(get_db)):
-    """Endpoint para depuración"""
     try:
-        # Obtener información de la conexión a la BD
         db_info = {
             "connected": True,
-            "tables": [str(table) for table in Base.metadata.tables]
+            "tables": list(Base.metadata.tables.keys())
         }
         return {
             "database": db_info,
-            "environment": {k: v for k, v in os.environ.items() if not k.startswith('_')}
+            "environment": {
+                k: v for k, v in os.environ.items() if not k.startswith('_')
+            }
         }
     except Exception as e:
         return {"error": str(e)}
