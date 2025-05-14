@@ -1,0 +1,40 @@
+# Core
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+python-dotenv
+python-jose
+starlette
+email-validator
+fastapi[all]
+google
+google-auth
+# CORS middleware
+aiofiles
+requests
+
+# SQLite (ya viene incluido en Python)
+
+# Optional
+sqlmodel
+
+# Testing
+pytest
+
+# HTTP Client para pruebas
+httpx
+
+# Dependencias internas
+anyio
+certifi
+click
+greenlet
+h11
+httpcore
+idna
+packaging
+pluggy
+sniffio
+typing_extensions
+iniconfig
