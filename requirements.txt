@@ -14,8 +14,7 @@ google-auth
 aiofiles
 requests
 
-# Database
-psycopg2-binary  # PostgreSQL driver
+# SQLite (ya viene incluido en Python)
 
 # Optional
 sqlmodel
