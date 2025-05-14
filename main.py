@@ -67,10 +67,15 @@ except Exception as e:
 async def root():
     return {"message": "API de GESEX funcionando correctamente"}
 
-# Ruta para healthcheck
+# Ruta para healthcheck con validación de la conexión a la base de datos
 @app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
+async def health_check(db: Session = Depends(get_db)):
+    try:
+        # Verificar conexión a la base de datos
+        db.query("SELECT 1").first()
+        return {"status": "healthy"}
+    except Exception as e:
+        return {"status": "unhealthy", "error": str(e)}
 
 # Ruta para depuración
 @app.get("/debug")
