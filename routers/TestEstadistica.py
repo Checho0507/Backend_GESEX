@@ -3,9 +3,9 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 
 # Importaciones internas del proyecto
-from app.database import SessionLocal
-from app.models.TestEstadistica import TestEstadistica 
-from app.schemas.TestEstadistica import TestEstadisticaCreate, TestEstadistica
+from database import SessionLocal
+from models.TestEstadistica import TestEstadistica 
+from schemas.TestEstadistica import TestEstadisticaCreate, TestEstadistica
 
 # Enrutador para el recurso test-estadistica
 router = APIRouter(prefix="/test-estadistica", tags=["TestEstadistica"])

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.models.Administrador import Administrador
-from app.schemas.Administrador import AdministradorCreate, AdministradorOut
+from database import SessionLocal
+from models.Administrador import Administrador
+from schemas.Administrador import AdministradorCreate, AdministradorOut
 
 router = APIRouter(prefix="/Administradores", tags=["Administradores"])
 

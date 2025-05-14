@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app.models.Usuario import Usuario
-from app.schemas.Usuario import UsuarioCreate, UsuarioOut
+from database import SessionLocal
+from models.Usuario import Usuario
+from schemas.Usuario import UsuarioCreate, UsuarioOut
 router = APIRouter(prefix="/Usuarios", tags=["Usuarios"])
 
 # Dependency para obtener sesión de BD

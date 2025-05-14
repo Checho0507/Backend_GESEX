@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from app.database import SessionLocal
-from app.models.Test import Test
-from app.schemas.Test import TestCreate, TestOut
+from database import SessionLocal
+from models.Test import Test
+from schemas.Test import TestCreate, TestOut
 
 router = APIRouter(prefix="/cuestionarios", tags=["Tests"])
 

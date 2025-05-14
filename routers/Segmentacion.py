@@ -1,9 +1,9 @@
 # routers/Segmentacion.py
 
 from fastapi import APIRouter
-from app.models.Segmentacion import Segmentacion
-from app.schemas.Segmentacion import ResultadoSegmentacion, EntradasSegmentacion
-from app.database import SessionLocal  # Import SessionLocal from your database module
+from models.Segmentacion import Segmentacion
+from schemas.Segmentacion import ResultadoSegmentacion, EntradasSegmentacion
+from database import SessionLocal  # Import SessionLocal from your database module
 
 router = APIRouter(prefix="/segmentacion", tags=["Segmentación"])
 

@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from datetime import datetime, date
 
-from app.database import SessionLocal
-from app.models.Respuestas import Respuesta
-from app.models.Test import Test
-from app.models.Segmentacion import Segmentacion
-from app.schemas.Respuestas import RespuestaCreate, RespuestaOut
+from database import SessionLocal
+from models.Respuestas import Respuesta
+from models.Test import Test
+from models.Segmentacion import Segmentacion
+from schemas.Respuestas import RespuestaCreate, RespuestaOut
 
 router = APIRouter(prefix="/Respuestas", tags=["Respuestas"])
 

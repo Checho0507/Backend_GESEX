@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routers import Usuario, Administrador, Test, Respuestas , Estadisticas , TestEstadistica , Segmentacion, Auth
+from routers import Usuario, Administrador, Test, Respuestas , Estadisticas , TestEstadistica , Segmentacion, Auth
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()

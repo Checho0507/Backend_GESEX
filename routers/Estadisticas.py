@@ -4,11 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from app.database import SessionLocal
-from app.models.Estadisticas import Estadisticas as EstadisticasModel
-from app.schemas.Estadisticas import EstadisticasCreate , EstadisticasOut
+from database import SessionLocal
+from models.Estadisticas import Estadisticas as EstadisticasModel
+from schemas.Estadisticas import EstadisticasCreate , EstadisticasOut
 
-from app.models.Respuestas import Respuesta
+from models.Respuestas import Respuesta
 
 router = APIRouter(prefix="/estadisticas", tags=["Estadísticas"])
 

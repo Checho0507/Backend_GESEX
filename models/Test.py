@@ -2,7 +2,7 @@ from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.types import JSON
 import uuid
-from app.database import Base
+from database import Base
 from sqlalchemy.orm import relationship
 
 class Test(Base):

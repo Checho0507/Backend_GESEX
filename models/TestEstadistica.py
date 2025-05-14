@@ -3,7 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 import uuid
 
-from app.database import Base
+from database import Base
 
 # Modelo que representa la relación entre una Respuesta y una Estadística generada a partir de esa respuesta
 class TestEstadistica(Base):

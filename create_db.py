@@ -1,5 +1,5 @@
-from app.database import Base, engine
-from app.models import Usuario, Administrador, Test, Respuestas , Estadisticas , TestEstadistica
+from database import Base, engine
+from models import Usuario, Administrador, Test, Respuestas , Estadisticas , TestEstadistica
 # importa los modelos que tengas
 
 # Crear todas las tablas en la base de datos

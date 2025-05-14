@@ -4,7 +4,7 @@ from sqlalchemy.orm import relationship
 import uuid
 from datetime import datetime
 
-from app.database import Base
+from database import Base
 
 class Estadisticas(Base):
     __tablename__ = "estadisticas"

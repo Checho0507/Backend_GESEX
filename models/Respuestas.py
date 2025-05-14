@@ -4,7 +4,7 @@ from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.types import JSON
 from sqlalchemy.orm import relationship
 import uuid
-from app.database import Base
+from database import Base
 
 
 class Respuesta(Base):
