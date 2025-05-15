@@ -1,0 +1,27 @@
+{
+  "name": "backend-gesex",
+  "version": "1.0.0",
+  "description": "Backend para la aplicación GESEX",
+  "main": "main.py",
+  "scripts": {
+    "start": "uvicorn main:app --host 0.0.0.0 --port $PORT",
+    "dev": "uvicorn main:app --reload"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "cacheDirectories": [
+    "__pycache__"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Checho0507/Backend_GESEX"
+  },
+  "keywords": [
+    "fastapi",
+    "python",
+    "backend"
+  ],
+  "author": "",
+  "license": "MIT"
+}

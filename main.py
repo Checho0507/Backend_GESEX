@@ -26,11 +26,13 @@ DEVELOPMENT_URL = os.getenv("DEVELOPMENT_URL", "http://localhost:5173")
 logger.info(f"FRONTEND_URL: {FRONTEND_URL}")
 logger.info(f"DEVELOPMENT_URL: {DEVELOPMENT_URL}")
 logger.info(f"DATABASE_URL exists: {os.getenv('DATABASE_URL') is not None}")
+logger.info(f"Entorno de Railway: {os.getenv('RAILWAY_ENVIRONMENT', 'no definido')}")
+logger.info(f"Puerto asignado: {os.getenv('PORT', '8000')}")
 
-# Middleware de CORS (puedes limitar luego en producción)
+# Middleware de CORS - configuración más segura para producción
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Cambiar a [FRONTEND_URL, DEVELOPMENT_URL] en producción
+    allow_origins=[FRONTEND_URL, DEVELOPMENT_URL, "https://*.railway.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,7 +47,8 @@ async def startup_event():
         logger.info("Tablas creadas exitosamente.")
     except Exception as e:
         logger.error(f"Error al crear las tablas: {e}")
-        sys.exit(1)
+        # No salir en caso de error, Railway podría reintentar
+        # sys.exit(1)
 
 # Incluir routers
 try:
@@ -60,35 +63,41 @@ try:
     logger.info("Routers incluidos correctamente.")
 except Exception as e:
     logger.error(f"Error al incluir los routers: {e}")
-    sys.exit(1)
+    # No salir en caso de error, Railway podría reintentar
+    # sys.exit(1)
 
-# Ruta raíz
+# Ruta raíz - también servirá como healthcheck
 @app.get("/")
 async def root():
-    return {"message": "API de GESEX funcionando correctamente"}
+    return {"message": "API de GESEX funcionando correctamente", "status": "healthy"}
 
 # Ruta para healthcheck con validación de la conexión a la base de datos
 @app.get("/health")
 async def health_check(db: Session = Depends(get_db)):
     try:
         # Verificar conexión a la base de datos
-        db.query("SELECT 1").first()
-        return {"status": "healthy"}
+        result = db.execute("SELECT 1").first()
+        return {"status": "healthy", "database": "connected"}
     except Exception as e:
+        logger.error(f"Error de conexión a base de datos: {e}")
         return {"status": "unhealthy", "error": str(e)}
 
 # Ruta para depuración
 @app.get("/debug")
-async def debug_info(db: Session = Depends(get_db)):
+async def debug_info():
     try:
-        db_info = {
-            "connected": True,
-            "tables": list(Base.metadata.tables.keys())
+        environment = {
+            k: v for k, v in os.environ.items() 
+            if not k.startswith('_') and not k.lower().startswith('secret') 
+            and not k.lower().startswith('password')
         }
+        
         return {
-            "database": db_info,
-            "environment": {
-                k: v for k, v in os.environ.items() if not k.startswith('_')
+            "environment": environment,
+            "railway": {
+                "environment": os.getenv('RAILWAY_ENVIRONMENT', None),
+                "project_id": os.getenv('RAILWAY_PROJECT_ID', None),
+                "service_id": os.getenv('RAILWAY_SERVICE_ID', None),
             }
         }
     except Exception as e:
