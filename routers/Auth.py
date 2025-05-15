@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
-from ..utils.auth_utils import verify_google_token, create_jwt_token
+from utils.auth_utils import verify_google_token, create_jwt_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
