@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 
 # Variables de entorno para CORS
-FRONTEND_URL = os.getenv("FRONTEND_URL", "https://frontend-gesex-production.up.railway.app")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://frontendgesex-production.up.railway.app")
 DEVELOPMENT_URL = os.getenv("DEVELOPMENT_URL", "http://localhost:5173")
 
 # Mostrar configuración cargada
