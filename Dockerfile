@@ -27,4 +27,4 @@ ENV PORT 8000
 ENV DATABASE_URL ${DATABASE_URL:-sqlite:///./database.db}
 
 # Comando para ejecutar la aplicación
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "$PORT"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
