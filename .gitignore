@@ -1,1 +1,17 @@
-database.db
+# Archivos de entorno y configuración sensible
+.env
+.env.*
+
+# Bases de datos locales
+*.db
+
+# Directorios comunes de Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+venv/
+.envrc
+
+# Archivos de log
+*.log
