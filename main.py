@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import os
 import logging
-import sys
 
 from database import Base, engine, get_db
 from routers import (
@@ -18,25 +17,30 @@ logger = logging.getLogger(__name__)
 # Inicializar FastAPI
 app = FastAPI()
 
-# Variables de entorno para CORS
+# Definir orígenes permitidos para CORS
 FRONTEND_URL = os.getenv("FRONTEND_URL", "https://frontendgesex-production.up.railway.app")
 DEVELOPMENT_URL = os.getenv("DEVELOPMENT_URL", "http://localhost:5173")
 
-# Mostrar configuración cargada
+origins = [
+    FRONTEND_URL,
+    DEVELOPMENT_URL
+]
+
+# Middleware de CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Log de configuración cargada
 logger.info(f"FRONTEND_URL: {FRONTEND_URL}")
 logger.info(f"DEVELOPMENT_URL: {DEVELOPMENT_URL}")
 logger.info(f"DATABASE_URL exists: {os.getenv('DATABASE_URL') is not None}")
 logger.info(f"Entorno de Railway: {os.getenv('RAILWAY_ENVIRONMENT', 'no definido')}")
 logger.info(f"Puerto asignado: {os.getenv('PORT', '8000')}")
-
-# Middleware de CORS - configuración más segura para producción
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[FRONTEND_URL, DEVELOPMENT_URL, "https://*.railway.app"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Crear tablas al iniciar
 @app.on_event("startup")
@@ -47,8 +51,6 @@ async def startup_event():
         logger.info("Tablas creadas exitosamente.")
     except Exception as e:
         logger.error(f"Error al crear las tablas: {e}")
-        # No salir en caso de error, Railway podría reintentar
-        # sys.exit(1)
 
 # Incluir routers
 try:
@@ -63,26 +65,23 @@ try:
     logger.info("Routers incluidos correctamente.")
 except Exception as e:
     logger.error(f"Error al incluir los routers: {e}")
-    # No salir en caso de error, Railway podría reintentar
-    # sys.exit(1)
 
-# Ruta raíz - también servirá como healthcheck
+# Ruta raíz
 @app.get("/")
 async def root():
     return {"message": "API de GESEX funcionando correctamente", "status": "healthy"}
 
-# Ruta para healthcheck con validación de la conexión a la base de datos
+# Ruta health
 @app.get("/health")
 async def health_check(db: Session = Depends(get_db)):
     try:
-        # Verificar conexión a la base de datos
         result = db.execute("SELECT 1").first()
         return {"status": "healthy", "database": "connected"}
     except Exception as e:
         logger.error(f"Error de conexión a base de datos: {e}")
         return {"status": "unhealthy", "error": str(e)}
 
-# Ruta para depuración
+# Ruta debug
 @app.get("/debug")
 async def debug_info():
     try:
@@ -91,7 +90,6 @@ async def debug_info():
             if not k.startswith('_') and not k.lower().startswith('secret') 
             and not k.lower().startswith('password')
         }
-        
         return {
             "environment": environment,
             "railway": {
