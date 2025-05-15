@@ -1,14 +1,18 @@
+import os
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from fastapi import HTTPException
 from jose import jwt
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
 
 # Configuración (usa variables de entorno en producción!)
-GOOGLE_CLIENT_ID = "58428553625-ae0vqt34c9jaiul7gb66c3u9b34fd2g9.apps.googleusercontent.com"
-SECRET_KEY = "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"  # Cambia esto!
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")  # Obtener desde el .env
+SECRET_KEY = os.getenv("SECRET_KEY")  # Obtener desde el .env
 ALGORITHM = "HS256"
-
 
 def verify_google_token(token: str):
     """Verifica el token de Google y devuelve datos del usuario"""
@@ -31,7 +35,6 @@ def verify_google_token(token: str):
 
     except ValueError as e:
         raise HTTPException(401, f"Token inválido: {str(e)}")
-
 
 def create_jwt_token(email: str):
     """Crea un JWT para sesiones en tu sistema"""
