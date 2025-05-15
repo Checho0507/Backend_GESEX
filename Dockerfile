@@ -4,7 +4,7 @@ FROM python:3.11-slim
 # Establece el directorio de trabajo
 WORKDIR /app
 
-# Instalar dependencias del sistema necesarias (si usas psycopg2 o alguna librería que las necesite)
+# Instalar dependencias del sistema necesarias para PostgreSQL
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
@@ -22,9 +22,8 @@ COPY . .
 # Exponer el puerto en el que la app escuchará
 EXPOSE 8000
 
-# Configurar las variables de entorno si no están definidas
+# Configurar las variables de entorno
 ENV PORT 8000
-ENV DATABASE_URL ${DATABASE_URL:-sqlite:///./database.db}
 
 # Comando para ejecutar la aplicación
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
