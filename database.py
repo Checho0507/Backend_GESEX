@@ -14,6 +14,7 @@ RAILWAY_ENVIRONMENT = os.getenv("RAILWAY_ENVIRONMENT", None)
 
 logger.info(f"Configurando base de datos. En Railway: {RAILWAY_ENVIRONMENT is not None}")
 
+# Si DATABASE_URL está disponible, usaremos PostgreSQL
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     # Railway usa postgres://, pero SQLAlchemy requiere postgresql://
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -24,9 +25,14 @@ if not DATABASE_URL:
     logger.warning("No se encontró DATABASE_URL. Usando SQLite local.")
     SQLALCHEMY_DATABASE_URL = "sqlite:///./database.db"
     # Conectar con SQLite (check_same_thread=False es necesario para SQLite en modo multihilo)
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-    )
+    try:
+        engine = create_engine(
+            SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+        )
+        logger.info("Motor de base de datos SQLite inicializado correctamente.")
+    except Exception as e:
+        logger.error(f"Error al configurar el motor de base de datos SQLite: {e}")
+        raise
 else:
     logger.info("Usando PostgreSQL con la URL proporcionada.")
     try:
@@ -40,9 +46,8 @@ else:
         )
         logger.info("Motor de base de datos PostgreSQL inicializado correctamente.")
     except Exception as e:
-        logger.error(f"Error al configurar el motor de base de datos: {e}")
-        # En caso de error, intentar con configuración mínima
-        engine = create_engine(DATABASE_URL)
+        logger.error(f"Error al configurar el motor de base de datos PostgreSQL: {e}")
+        raise
 
 # Crear una sesión local
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
