@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 # Configuración para PostgreSQL
 DB_USER = os.getenv("DB_USER", "enterprisedb")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "admin1234*")
-DB_HOST = os.getenv("DB_HOST", "127.0.0.1")
+DB_HOST = os.getenv("DB_HOST", "containers-us-west-99.railway.app")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "db")
 
