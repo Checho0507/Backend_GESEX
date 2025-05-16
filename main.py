@@ -21,9 +21,12 @@ app = FastAPI()
 FRONTEND_URL = os.getenv("FRONTEND_URL", "https://frontendgesex-production.up.railway.app")
 DEVELOPMENT_URL = os.getenv("DEVELOPMENT_URL", "http://localhost:5173")
 
+# Definir orígenes permitidos para CORS - versión más permisiva para desarrollo
 origins = [
-    FRONTEND_URL,
-    DEVELOPMENT_URL
+    "https://frontendgesex-production.up.railway.app",
+    "http://localhost:5173",
+    "https://frontendgesex-production.up.railway.app", # Sin barra al final
+    "*"  # Permitir cualquier origen temporalmente para pruebas
 ]
 
 # Middleware de CORS
