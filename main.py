@@ -69,7 +69,7 @@ except Exception as e:
 
 # Ruta raíz - también servirá como healthcheck
 @app.get("/")
-async def root():
+async def root(): 
     return {"message": "API de GESEX funcionando correctamente", "status": "healthy"}
 
 # Ruta para healthcheck con validación de la conexión a la base de datos
