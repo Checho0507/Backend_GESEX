@@ -8,11 +8,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 # Configuración para PostgreSQL
-DB_USER = os.getenv("DB_USER", "enterprisedb")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "admin1234*")
-DB_HOST = os.getenv("DB_HOST", "containers-us-west-99.railway.app")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "db")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("DB_NAME")
 
 # Crear la URL de la base de datos PostgreSQL
 SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
