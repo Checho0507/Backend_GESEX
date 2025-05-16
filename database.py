@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 # Configuración para PostgreSQL
 DB_USER = os.getenv("DB_USER", "postgres")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "xJNouKaYGjZCqJqVQOzYJPtDbmBoYUHz*")
-DB_HOST = os.getenv("DB_HOST", "gondola.proxy.rlwy.net")
-DB_PORT = os.getenv("DB_PORT", "13146")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "RDQrUJGkYUnuJfasWZIaCaJQSgbJXLMw*")
+DB_HOST = os.getenv("DB_HOST", "postgres-2foj.railway.internal")
+DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "railway")
 
 # Crear la URL de la base de datos PostgreSQL
